@@ -25,15 +25,6 @@ pipeline {
                 }
             }
         }
-        stage('Sonar Integration'){
-            steps{
-                withSonarQubeEnv('server-sonar') {
-                    bat 'mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install';
-                    bat 'mvn sonar:sonar'
-                    bat 'mvn clean install'
-                }
-            }
-        }
     }
     
 }
