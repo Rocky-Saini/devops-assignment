@@ -10,7 +10,23 @@ pipeline {
                 bat 'mvn clean install'
             }
         }
-           stage('Static code analysis'){
+           
+        stage('Build docker image'){
+            steps{
+                script{
+                    bat 'docker build -t rockysaini/devops-assignment .'
+                }
+            }
+        }
+        stage('Push image to Hub'){
+            steps{
+                script{
+                   bat 'docker login -u rockysaini -p "Docker@9027"'
+                   bat 'docker push rockysaini/devops-assignment'
+                }
+            }
+        }
+        stage('Static code analysis'){
             
             steps{
                 
@@ -34,21 +50,6 @@ pipeline {
                     }
                 }
             }
-        stage('Build docker image'){
-            steps{
-                script{
-                    bat 'docker build -t rockysaini/devops-assignment .'
-                }
-            }
-        }
-        stage('Push image to Hub'){
-            steps{
-                script{
-                   bat 'docker login -u rockysaini -p "Docker@9027"'
-                   bat 'docker push rockysaini/devops-assignment'
-                }
-            }
-        }
     }
     
 }
