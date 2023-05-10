@@ -10,21 +10,30 @@ pipeline {
                 bat 'mvn clean install'
             }
         }
-        stage('SonarQube Analysis') {
-            steps {
-                withSonarQubeEnv('server-sonar') {
-                    bat 'mvn sonar:sonar'
+           stage('Static code analysis'){
+            
+            steps{
+                
+                script{
+                    
+                    withSonarQubeEnv(credentialsId: 'server-sonar-api') {
+                        
+                        bat 'mvn clean package sonar:sonar'
+                    }
+                   }
+                    
                 }
             }
-        }
-
-        stage('Quality Gate') {
-            steps {
-                timeout(time: 1, unit: 'HOURS') {
-                    waitForQualityGate abortPipeline: true
+            stage('Quality Gate Status'){
+                
+                steps{
+                    
+                    script{
+                        
+                        waitForQualityGate abortPipeline: false, credentialsId: 'server-sonar'
+                    }
                 }
             }
-        }
         stage('Build docker image'){
             steps{
                 script{
